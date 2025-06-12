@@ -1,0 +1,2 @@
+This is a sample file.
+Please place the GTEA dataset in this directory.
