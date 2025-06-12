@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import os
 import sys
+import argparse
+from algorithms.center import CenterGazeEstimator
 
 # === キャリブレーション（画面サイズに基づく正規化用）
 CALIBRATION_WIDTH = 1280
@@ -11,6 +13,11 @@ CALIBRATION_HEIGHT = 960
 CIRCLE_RADIUS = 10
 CIRCLE_COLOR = (0, 0, 255)  # 赤
 CIRCLE_THICKNESS = 2
+
+ALGORITHM_DICT = {
+    "center": CenterGazeEstimator,
+    # "other": OtherGazeEstimator,
+}
 
 def load_begaze_gaze_data(path):
     gaze_dict = {}
@@ -45,18 +52,17 @@ def load_begaze_gaze_data(path):
     return gaze_avg
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage:",sys.argv[0]," <dataset_name>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("dataset_name", help="データセット名（拡張子不要）")
+    parser.add_argument("--algorithm", default="center", choices=ALGORITHM_DICT.keys(), help="使用するアルゴリズム")
+    args = parser.parse_args()
 
-    dataset_name = sys.argv[1]
-    # 拡張子が含まれていたら除去
-    dataset_name = os.path.splitext(dataset_name)[0]
+    dataset_name = os.path.splitext(args.dataset_name)[0]
 
     BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     VIDEO_PATH = os.path.join(BASE_DIR, "data", f"{dataset_name}.avi")
     GAZE_PATH = os.path.join(BASE_DIR, "data", f"{dataset_name}.txt")
-    OUTPUT_PATH = os.path.join(BASE_DIR, "output", f"annotated_{dataset_name}.avi")
+    OUTPUT_PATH = os.path.join(BASE_DIR, "outputs", f"annotated_{dataset_name}.avi")
 
     gaze_data = load_begaze_gaze_data(GAZE_PATH)
 
@@ -73,6 +79,9 @@ def main():
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
     out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps, (width, height))
 
+    # アルゴリズムのインスタンス化
+    estimator = ALGORITHM_DICT[args.algorithm]()
+
     frame_idx = 1  # BeGazeのフレーム番号は1始まり
 
     while True:
@@ -80,11 +89,15 @@ def main():
         if not ret:
             break
 
+        # 推定アルゴリズムの利用例
+        pred_x, pred_y = estimator.estimate_gaze(frame)
+        cv2.circle(frame, (int(pred_x), int(pred_y)), CIRCLE_RADIUS, (0,255,0), CIRCLE_THICKNESS)  # 予測視線（緑）
+
         if frame_idx in gaze_data:
             gx, gy = gaze_data[frame_idx]
             cx = int(gx * width)
             cy = int(gy * height)
-            cv2.circle(frame, (cx, cy), CIRCLE_RADIUS, CIRCLE_COLOR, CIRCLE_THICKNESS)
+            cv2.circle(frame, (cx, cy), CIRCLE_RADIUS, CIRCLE_COLOR, CIRCLE_THICKNESS)  # 正解視線（赤）
 
         cv2.imshow("Gaze Overlay", frame)
         out.write(frame)
