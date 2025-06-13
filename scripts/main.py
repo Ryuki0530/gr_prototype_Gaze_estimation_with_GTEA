@@ -4,6 +4,7 @@ import os
 import sys
 import argparse
 from algorithms.center import CenterGazeEstimator
+from evaluation import GazeEvaluator  # 追加
 
 # === キャリブレーション（画面サイズに基づく正規化用）
 CALIBRATION_WIDTH = 1280
@@ -55,6 +56,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("dataset_name", help="データセット名（拡張子不要）")
     parser.add_argument("--algorithm", default="center", choices=ALGORITHM_DICT.keys(), help="使用するアルゴリズム")
+    parser.add_argument("--no-eval", action="store_true", help="評価を無効化する")
     args = parser.parse_args()
 
     dataset_name = os.path.splitext(args.dataset_name)[0]
@@ -82,6 +84,9 @@ def main():
     # アルゴリズムのインスタンス化
     estimator = ALGORITHM_DICT[args.algorithm]()
 
+    # 評価機構のインスタンス化（デフォルト有効、--no-evalで無効）
+    evaluator = GazeEvaluator() if not args.no_eval else None
+
     frame_idx = 1  # BeGazeのフレーム番号は1始まり
 
     while True:
@@ -99,6 +104,10 @@ def main():
             cy = int(gy * height)
             cv2.circle(frame, (cx, cy), CIRCLE_RADIUS, CIRCLE_COLOR, CIRCLE_THICKNESS)  # 正解視線（赤）
 
+            # 評価用データ追加（正規化座標→ピクセル座標で比較）
+            if evaluator is not None:
+                evaluator.add((pred_x / width, pred_y / height), (gx, gy))
+
         cv2.imshow("Gaze Overlay", frame)
         out.write(frame)
 
@@ -111,6 +120,14 @@ def main():
     out.release()
     cv2.destroyAllWindows()
     print(f"出力完了：{OUTPUT_PATH}")
+
+    # 評価結果の表示
+    if evaluator is not None:
+        mean_dist = evaluator.mean_distance()
+        if mean_dist is not None:
+            print(f"平均ユークリッド距離（正規化座標）: {mean_dist:.4f}")
+        else:
+            print("評価データがありませんでした。")
 
 if __name__ == "__main__":
     main()
