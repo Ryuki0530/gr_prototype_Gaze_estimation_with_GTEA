@@ -97,8 +97,9 @@ def main():
         if not ret:
             break
 
-        # 推定アルゴリズムの利用例
+        # 推定アルゴリズムの利用
         pred_x, pred_y = estimator.estimate_gaze(frame)
+        estimator.draw(frame)
         cv2.circle(frame, (int(pred_x), int(pred_y)), CIRCLE_RADIUS, (0,255,0), CIRCLE_THICKNESS)  # 予測視線（緑）
 
         if frame_idx in gaze_data:
