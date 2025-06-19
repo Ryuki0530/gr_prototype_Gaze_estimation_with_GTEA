@@ -13,3 +13,11 @@ class GazeEstimator(ABC):
             tuple: (x, y) 視線座標（正規化座標またはピクセル座標）
         """
         pass
+
+    def draw(self, frame):
+        """
+        処理可視化用の描画メソッド
+        Args:
+            frame (numpy.ndarray): 入力画像フレーム
+        """
+        pass
