@@ -4,6 +4,8 @@ import os
 import sys
 import argparse
 from algorithms.center import CenterGazeEstimator
+from algorithms.opticalFlow_less_moving_places import OpticalFlowLessMovingPlacesEstimator
+# 追加: 他のアルゴリズムが必要な場合はここにインポート
 from evaluation import GazeEvaluator  # 追加
 
 # === キャリブレーション（画面サイズに基づく正規化用）
@@ -17,6 +19,7 @@ CIRCLE_THICKNESS = 2
 
 ALGORITHM_DICT = {
     "center": CenterGazeEstimator,
+    "less_moving_places": OpticalFlowLessMovingPlacesEstimator,
     # "other": OtherGazeEstimator,
 }
 
