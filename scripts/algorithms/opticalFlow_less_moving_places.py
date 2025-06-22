@@ -79,3 +79,18 @@ class OpticalFlowLessMovingPlacesEstimator(GazeEstimator):
         # 計算しないフレームは前回の結果を返す
 
         return self.last_gaze
+
+    def draw(self, frame):
+        """
+        グリッド線をframeに描画する
+        """
+        h, w = frame.shape[:2]
+        gh, gw = self.grid_size
+        # 横線
+        for i in range(1, gh):
+            y = int(h * i / gh)
+            cv2.line(frame, (0, y), (w, y), (255, 255, 0), 1)
+        # 縦線
+        for j in range(1, gw):
+            x = int(w * j / gw)
+            cv2.line(frame, (x, 0), (x, h), (255, 255, 0), 1)
