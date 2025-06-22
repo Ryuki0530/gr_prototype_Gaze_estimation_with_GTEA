@@ -5,6 +5,7 @@ import sys
 import argparse
 from algorithms.center import CenterGazeEstimator
 from algorithms.opticalFlow_less_moving_places import OpticalFlowLessMovingPlacesEstimator
+from algorithms.opticalFlow_moving_refrect_center import OpticalFlowMovingRefrectsCenter
 # 追加: 他のアルゴリズムが必要な場合はここにインポート
 from evaluation import GazeEvaluator  # 追加
 
@@ -20,6 +21,7 @@ CIRCLE_THICKNESS = 2
 ALGORITHM_DICT = {
     "center": CenterGazeEstimator,
     "less_moving_places": OpticalFlowLessMovingPlacesEstimator,
+    "moving_refrect_center": OpticalFlowMovingRefrectsCenter,
     # "other": OtherGazeEstimator,
 }
 
