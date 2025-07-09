@@ -5,7 +5,3 @@ data/*
 # outputsディレクトリ内の全てを無視し、sample.*のみ管理
 outputs/*
 !outputs/sample.*
-
-# キャッシュファイルを除外
-*.pyc
-*.pth
