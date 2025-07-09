@@ -5,6 +5,7 @@ import sys
 import argparse
 from algorithms.center import CenterGazeEstimator
 from algorithms.opticalFlow_less_moving_places import OpticalFlowLessMovingPlacesEstimator
+from algorithms.opticalFlow_moving_refrect_center import OpticalFlowMovingRefrectsCenter
 # 追加: 他のアルゴリズムが必要な場合はここにインポート
 from evaluation import GazeEvaluator  # 追加
 from algorithms.cnn_singleframe.cnn_singleframe import CnnSingleFrameEstimator  # 追加
@@ -22,6 +23,7 @@ ALGORITHM_DICT = {
     "center": CenterGazeEstimator,
     "less_moving_places": OpticalFlowLessMovingPlacesEstimator,
     "cnn_single":  CnnSingleFrameEstimator,
+    "moving_refrect_center": OpticalFlowMovingRefrectsCenter,
     # "other": OtherGazeEstimator,
 }
 
