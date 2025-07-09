@@ -8,6 +8,7 @@ from algorithms.opticalFlow_less_moving_places import OpticalFlowLessMovingPlace
 from algorithms.opticalFlow_moving_refrect_center import OpticalFlowMovingRefrectsCenter
 # 追加: 他のアルゴリズムが必要な場合はここにインポート
 from evaluation import GazeEvaluator  # 追加
+from algorithms.cnn_singleframe.cnn_singleframe import CnnSingleFrameEstimator  # 追加
 
 # === キャリブレーション（画面サイズに基づく正規化用）
 CALIBRATION_WIDTH = 1280
@@ -21,6 +22,7 @@ CIRCLE_THICKNESS = 2
 ALGORITHM_DICT = {
     "center": CenterGazeEstimator,
     "less_moving_places": OpticalFlowLessMovingPlacesEstimator,
+    "cnn_single":  CnnSingleFrameEstimator,
     "moving_refrect_center": OpticalFlowMovingRefrectsCenter,
     # "other": OtherGazeEstimator,
 }
