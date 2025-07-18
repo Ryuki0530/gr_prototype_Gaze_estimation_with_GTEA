@@ -44,6 +44,11 @@ pip install -r requirements.txt
 python src/main.py
 ```
 
+## 各種アルゴリズムについて
+-cnn_gru 
+下記リポジトリを参照
+https://github.com/Ryuki0530/gr_firstperson_gaze_estimetion_with_cnn_gru
+
 ## ライセンス
 
 このプロジェクトはMITライセンスのもとで公開されています。
@@ -51,5 +56,5 @@ python src/main.py
 ## 参考文献
 
 - [GTEA Dataset](https://cbs.ic.gatech.edu/fpv/)
-- 論文や関連資料をここに追記
+
 
