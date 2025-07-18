@@ -45,9 +45,8 @@ python src/main.py
 ```
 
 ## 各種アルゴリズムについて
--cnn_gru 
-下記リポジトリを参照
-https://github.com/Ryuki0530/gr_firstperson_gaze_estimetion_with_cnn_gru
+- cnn_gru
+<a href="https://github.com/Ryuki0530/gr_firstperson_gaze_estimetion_with_cnn_gru">このリポジトリ</a>を参照
 
 ## ライセンス
 
