@@ -6,8 +6,9 @@ import argparse
 from algorithms.center import CenterGazeEstimator
 from algorithms.opticalFlow_less_moving_places import OpticalFlowLessMovingPlacesEstimator
 # 追加: 他のアルゴリズムが必要な場合はここにインポート
-from evaluation import GazeEvaluator  # 追加
-from algorithms.cnn_singleframe.cnn_singleframe import CnnSingleFrameEstimator  # 追加
+from evaluation import GazeEvaluator
+from algorithms.cnn_singleframe.cnn_singleframe import CnnSingleFrameEstimator
+from algorithms.cnn_gru.cnn_gru import CnnGruHybridEstimator
 
 # === キャリブレーション（画面サイズに基づく正規化用）
 CALIBRATION_WIDTH = 1280
@@ -22,6 +23,7 @@ ALGORITHM_DICT = {
     "center": CenterGazeEstimator,
     "less_moving_places": OpticalFlowLessMovingPlacesEstimator,
     "cnn_single":  CnnSingleFrameEstimator,
+    "cnn_gru": CnnGruHybridEstimator,  # 追加: CNN-GRUアルゴリズムを使用する場合はコメントアウトを外す
     # "other": OtherGazeEstimator,
 }
 
