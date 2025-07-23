@@ -6,10 +6,15 @@ import argparse
 from evaluation import GazeEvaluator
 #各種アルゴリズムクラス
 from algorithms.center import CenterGazeEstimator
+
 from algorithms.opticalFlow.opticalFlow_less_moving_places import OpticalFlowLessMovingPlacesEstimator
 from algorithms.opticalFlow.opticalFlow_moving_refrect_center import OpticalFlowMovingRefrectsCenter
 from algorithms.opticalFlow.WeightedFlowSmooth import WeightedFlowSmoothGazeEstimator
 from algorithms.cnn_singleframe.cnn_singleframe import CnnSingleFrameEstimator
+from algorithms.cnn_gru.cnn_gru import CnnGruHybridEstimator
+from algorithms.cnn_doubleframe.cnn_doubleframe import GazeEstimatorMobileNet
+# 追加: 他のアルゴリズムが必要な場合はここにインポート
+
 
 # === キャリブレーション（画面サイズに基づく正規化用）
 CALIBRATION_WIDTH = 1280
@@ -26,6 +31,8 @@ ALGORITHM_DICT = {
     "cnn_single":  CnnSingleFrameEstimator,
     "moving_refrect_center": OpticalFlowMovingRefrectsCenter,
     "weighted_flow_smooth": WeightedFlowSmoothGazeEstimator,
+    "cnn_gru": CnnGruHybridEstimator, 
+    "cnn_double": GazeEstimatorMobileNet,
     # "other": OtherGazeEstimator,
 }
 
