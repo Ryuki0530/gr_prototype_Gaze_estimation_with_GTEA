@@ -9,6 +9,7 @@ from algorithms.opticalFlow_less_moving_places import OpticalFlowLessMovingPlace
 from evaluation import GazeEvaluator
 from algorithms.cnn_singleframe.cnn_singleframe import CnnSingleFrameEstimator
 from algorithms.cnn_gru.cnn_gru import CnnGruHybridEstimator
+from algorithms.cnn_doubleframe.cnn_doubleframe import GazeEstimatorMobileNet
 
 # === キャリブレーション（画面サイズに基づく正規化用）
 CALIBRATION_WIDTH = 1280
@@ -24,6 +25,7 @@ ALGORITHM_DICT = {
     "less_moving_places": OpticalFlowLessMovingPlacesEstimator,
     "cnn_single":  CnnSingleFrameEstimator,
     "cnn_gru": CnnGruHybridEstimator,  # 追加: CNN-GRUアルゴリズムを使用する場合はコメントアウトを外す
+    "cnn_double": GazeEstimatorMobileNet,
     # "other": OtherGazeEstimator,
 }
 
