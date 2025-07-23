@@ -9,7 +9,7 @@ from base import GazeEstimator
 
 
 class CnnSingleFrameEstimator(GazeEstimator):
-    MODEL_PATH = os.path.join(os.path.dirname(__file__), "gaze_model_epoch100.pth")
+    MODEL_PATH = os.path.join(os.path.dirname(__file__), "gaze_model_epoch55.pth")
     IMG_SIZE = (224, 224)
     DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 

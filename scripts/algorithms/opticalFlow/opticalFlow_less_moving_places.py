@@ -1,6 +1,9 @@
 import numpy as np
 import cv2
-from .base import GazeEstimator
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from base import GazeEstimator
 
 class OpticalFlowLessMovingPlacesEstimator(GazeEstimator):
     def __init__(self, grid_size=(4, 4), resize_scale=0.5, flow_interval=2):
