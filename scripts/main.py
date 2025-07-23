@@ -3,12 +3,13 @@ import numpy as np
 import os
 import sys
 import argparse
+from evaluation import GazeEvaluator
+#各種アルゴリズムクラス
 from algorithms.center import CenterGazeEstimator
-from algorithms.opticalFlow_less_moving_places import OpticalFlowLessMovingPlacesEstimator
-from algorithms.opticalFlow_moving_refrect_center import OpticalFlowMovingRefrectsCenter
-# 追加: 他のアルゴリズムが必要な場合はここにインポート
-from evaluation import GazeEvaluator  # 追加
-from algorithms.cnn_singleframe.cnn_singleframe import CnnSingleFrameEstimator  # 追加
+from algorithms.opticalFlow.opticalFlow_less_moving_places import OpticalFlowLessMovingPlacesEstimator
+from algorithms.opticalFlow.opticalFlow_moving_refrect_center import OpticalFlowMovingRefrectsCenter
+from algorithms.opticalFlow.WeightedFlowSmooth import WeightedFlowSmoothGazeEstimator
+from algorithms.cnn_singleframe.cnn_singleframe import CnnSingleFrameEstimator
 
 # === キャリブレーション（画面サイズに基づく正規化用）
 CALIBRATION_WIDTH = 1280
@@ -24,6 +25,7 @@ ALGORITHM_DICT = {
     "less_moving_places": OpticalFlowLessMovingPlacesEstimator,
     "cnn_single":  CnnSingleFrameEstimator,
     "moving_refrect_center": OpticalFlowMovingRefrectsCenter,
+    "weighted_flow_smooth": WeightedFlowSmoothGazeEstimator,
     # "other": OtherGazeEstimator,
 }
 
@@ -64,6 +66,7 @@ def main():
     parser.add_argument("dataset_name", help="データセット名（拡張子不要）")
     parser.add_argument("--algorithm", default="center", choices=ALGORITHM_DICT.keys(), help="使用するアルゴリズム")
     parser.add_argument("--no-eval", action="store_true", help="評価を無効化する")
+    parser.add_argument("--feedback", action="store_true", help="フィードバックを有効化する")
     args = parser.parse_args()
 
     dataset_name = os.path.splitext(args.dataset_name)[0]
@@ -101,8 +104,13 @@ def main():
         if not ret:
             break
 
-        # 推定アルゴリズムの利用
+        # 推定アルゴリズムの利用ta[frame_idx]
         pred_x, pred_y = estimator.estimate_gaze(frame)
+        if args.feedback:
+            # フィードバックが有効な場合、正解視線を設定
+            if frame_idx in gaze_data:
+                gx, gy = gaze_data[frame_idx]
+                estimator.set_feedback(gx * width, gy * height)
         estimator.draw(frame)
         cv2.circle(frame, (int(pred_x), int(pred_y)), CIRCLE_RADIUS, (0,255,0), CIRCLE_THICKNESS)  # 予測視線（緑）
 

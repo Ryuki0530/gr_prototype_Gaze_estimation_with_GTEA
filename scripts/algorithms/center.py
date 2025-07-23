@@ -14,5 +14,5 @@ class CenterGazeEstimator(GazeEstimator):
         """
         height, width = frame.shape[:2]
         center_x = width // 2
-        center_y = height // 2
+        center_y = (height/3)*2
         return (center_x, center_y)

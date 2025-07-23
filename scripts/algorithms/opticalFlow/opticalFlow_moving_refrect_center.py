@@ -1,14 +1,17 @@
 import numpy as np
 import cv2
-from .base import GazeEstimator
+import os
+import sys
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+from base import GazeEstimator
 
 class OpticalFlowMovingRefrectsCenter(GazeEstimator):
     # --- 定数宣言 ---
     RESIZE_SCALE = 0.25  # 画像縮小率
     FLOW_INTERVAL = 2    # 何フレームごとに計算するか
     MOVE_GAIN = 1.0      # 光フロー移動量のスケール
-    MOVE_EXP = 6.0       # 光フロー移動量にかける指数
-    CENTER_DAMPING = 0.06  # 中央に戻る減衰係数
+    MOVE_EXP = 4.0       # 光フロー移動量にかける指数
+    CENTER_DAMPING = 0.1  # 中央に戻る減衰係数
 
     def __init__(self, resize_scale=None, flow_interval=None):
         self.prev_gray = None
