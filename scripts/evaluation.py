@@ -10,6 +10,7 @@ class GazeEvaluator:
         self.pred_list = []
         self.gt_list = []
         self.dist_list = []
+        self.squared_dist_list = []
 
     def add(self, pred, gt):
         """
@@ -21,6 +22,8 @@ class GazeEvaluator:
         self.pred_list.append(pred)
         self.gt_list.append(gt)
         self.dist_list.append(self.euclidean_distance(pred, gt))
+        self.squared_dist_list.append(self.euclidean_distance(pred, gt) ** 2)
+        return self.dist_list[-1], self.squared_dist_list[-1]
 
     @staticmethod
     def euclidean_distance(p1, p2):
@@ -32,17 +35,34 @@ class GazeEvaluator:
             return None
         return float(np.mean(self.dist_list))
 
+    def mean_squared_distance(self):
+        """平均ユークリッド距離の二乗を返す"""
+        if not self.squared_dist_list:
+            return None
+        return float(np.mean(self.squared_dist_list))
+
     def all_distances(self):
         """全フレームのユークリッド距離リストを返す"""
         return self.dist_list
 
+    def all_squared_distances(self):
+        """全フレームのユークリッド距離の二乗リストを返す"""
+        return self.squared_dist_list
 
     def print_eval_results(self):
+        """評価結果をコンソールに出力"""
+        print("\n=== 評価結果 ===")
         mean_dist = self.mean_distance()
         if mean_dist is not None:
-            print(f"平均ユークリッド距離（正規化座標）: {mean_dist:.4f}")
+            print(f"ユークリッド距離（正規化座標）の平均: {mean_dist:.4f}")
         else:
-            print("評価データがありませんでした。")
+            print("ユークリッド距離（正規化座標）の平均の評価データがありませんでした。")
+
+        mean_squared_dist = self.mean_squared_distance()
+        if mean_squared_dist is not None:
+            print(f"ユークリッド距離（正規化座標）の二乗の平均: {mean_squared_dist:.4f}")
+        else:
+            print("ユークリッド距離（正規化座標）の二乗の平均の評価データがありませんでした。")
 
     def clear(self):
         """内部データをリセット"""
