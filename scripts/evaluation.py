@@ -36,6 +36,14 @@ class GazeEvaluator:
         """全フレームのユークリッド距離リストを返す"""
         return self.dist_list
 
+
+    def print_eval_results(self):
+        mean_dist = self.mean_distance()
+        if mean_dist is not None:
+            print(f"平均ユークリッド距離（正規化座標）: {mean_dist:.4f}")
+        else:
+            print("評価データがありませんでした。")
+
     def clear(self):
         """内部データをリセット"""
         self.pred_list.clear()
