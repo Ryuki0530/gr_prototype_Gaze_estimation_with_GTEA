@@ -91,5 +91,13 @@ class WeightedFlowSmoothGazeEstimator(GazeEstimator):
                     y1 = int((y + fy * 3) / self.resize_scale)
                     cv2.arrowedLine(frame, (x0, y0), (x1, y1), (255, 255, 0), 1, tipLength=0.3)
 
+    def print_eval_results(self):
+        mean_dist = self.mean_distance()
+        if mean_dist is not None:
+            print(f"平均ユークリッド距離（正規化座標）: {mean_dist:.4f}")
+        else:
+            print("評価データがありませんでした。")
+    
     def _to_orig_coords(self, pt):
         return int(pt[0] / self.resize_scale), int(pt[1] / self.resize_scale)
+    

@@ -146,11 +146,7 @@ def main():
 
     # 評価結果の表示
     if evaluator is not None:
-        mean_dist = evaluator.mean_distance()
-        if mean_dist is not None:
-            print(f"平均ユークリッド距離（正規化座標）: {mean_dist:.4f}")
-        else:
-            print("評価データがありませんでした。")
+        evaluator.print_eval_results()
 
 if __name__ == "__main__":
     main()
