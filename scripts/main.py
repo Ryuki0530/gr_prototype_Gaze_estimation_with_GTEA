@@ -152,8 +152,7 @@ def main():
     # 評価結果の表示
     if evaluator is not None:
         evaluator.print_eval_results()
-
-
+        evaluator.clear()
 
 if __name__ == "__main__":
     main()

@@ -11,6 +11,7 @@ class GazeEvaluator:
         self.gt_list = []
         self.dist_list = []
         self.squared_dist_list = []
+        self.optical_flow_list = []
 
     def add(self, pred, gt):
         """
@@ -48,6 +49,19 @@ class GazeEvaluator:
     def all_squared_distances(self):
         """全フレームのユークリッド距離の二乗リストを返す"""
         return self.squared_dist_list
+    
+    def hit_ratio(self, threshold=0.1):
+        """
+        ヒット率を計算
+        Args:
+            threshold: ヒットとみなす距離の閾値
+        Returns:
+            ヒット率（0〜1）
+        """
+        if not self.dist_list:
+            return 0.0
+        hits = sum(1 for d in self.dist_list if d <= threshold)
+        return hits / len(self.dist_list)
 
     def print_eval_results(self):
         """評価結果をコンソールに出力"""
@@ -64,8 +78,16 @@ class GazeEvaluator:
         else:
             print("ユークリッド距離（正規化座標）の二乗の平均の評価データがありませんでした。")
 
+        hit_ratio = self.hit_ratio()
+        if hit_ratio is not None:
+            print(f"ヒット率（閾値0.1）: {hit_ratio:.4f}")
+        else:
+            print("ヒット率の評価データがありませんでした。")
+
     def clear(self):
         """内部データをリセット"""
         self.pred_list.clear()
         self.gt_list.clear()
         self.dist_list.clear()
+        self.squared_dist_list.clear()
+        
