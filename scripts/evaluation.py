@@ -80,7 +80,7 @@ class GazeEvaluator:
 
         hit_ratio = self.hit_ratio()
         if hit_ratio is not None:
-            print(f"ヒット率（閾値0.1）: {hit_ratio:.4f}")
+            print(f"ヒット率（閾値0.1）: {hit_ratio} (約{hit_ratio * 100:.4f}%)")
         else:
             print("ヒット率の評価データがありませんでした。")
 
