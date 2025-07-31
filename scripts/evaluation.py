@@ -10,6 +10,8 @@ class GazeEvaluator:
         self.pred_list = []
         self.gt_list = []
         self.dist_list = []
+        self.squared_dist_list = []
+        self.optical_flow_list = []
 
     def add(self, pred, gt):
         """
@@ -21,6 +23,8 @@ class GazeEvaluator:
         self.pred_list.append(pred)
         self.gt_list.append(gt)
         self.dist_list.append(self.euclidean_distance(pred, gt))
+        self.squared_dist_list.append(self.euclidean_distance(pred, gt) ** 2)
+        return self.dist_list[-1], self.squared_dist_list[-1]
 
     @staticmethod
     def euclidean_distance(p1, p2):
@@ -32,12 +36,58 @@ class GazeEvaluator:
             return None
         return float(np.mean(self.dist_list))
 
+    def mean_squared_distance(self):
+        """平均ユークリッド距離の二乗を返す"""
+        if not self.squared_dist_list:
+            return None
+        return float(np.mean(self.squared_dist_list))
+
     def all_distances(self):
         """全フレームのユークリッド距離リストを返す"""
         return self.dist_list
+
+    def all_squared_distances(self):
+        """全フレームのユークリッド距離の二乗リストを返す"""
+        return self.squared_dist_list
+    
+    def hit_ratio(self, threshold=0.1):
+        """
+        ヒット率を計算
+        Args:
+            threshold: ヒットとみなす距離の閾値
+        Returns:
+            ヒット率（0〜1）
+        """
+        if not self.dist_list:
+            return 0.0
+        hits = sum(1 for d in self.dist_list if d <= threshold)
+        return hits / len(self.dist_list)
+
+    def print_eval_results(self):
+        """評価結果をコンソールに出力"""
+        print("\n=== 評価結果 ===")
+        mean_dist = self.mean_distance()
+        if mean_dist is not None:
+            print(f"ユークリッド距離（正規化座標）の平均: {mean_dist:.4f}")
+        else:
+            print("ユークリッド距離（正規化座標）の平均の評価データがありませんでした。")
+
+        mean_squared_dist = self.mean_squared_distance()
+        if mean_squared_dist is not None:
+            print(f"ユークリッド距離（正規化座標）の二乗の平均: {mean_squared_dist:.4f}")
+        else:
+            print("ユークリッド距離（正規化座標）の二乗の平均の評価データがありませんでした。")
+
+        hit_ratio = self.hit_ratio()
+        if hit_ratio is not None:
+            print(f"ヒット率（閾値0.1）: {hit_ratio} (約{hit_ratio * 100:.4f}%)")
+        else:
+            print("ヒット率の評価データがありませんでした。")
 
     def clear(self):
         """内部データをリセット"""
         self.pred_list.clear()
         self.gt_list.clear()
         self.dist_list.clear()
+        self.squared_dist_list.clear()
+        

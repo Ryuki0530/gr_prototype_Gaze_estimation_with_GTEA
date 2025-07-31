@@ -91,5 +91,8 @@ class WeightedFlowSmoothGazeEstimator(GazeEstimator):
                     y1 = int((y + fy * 3) / self.resize_scale)
                     cv2.arrowedLine(frame, (x0, y0), (x1, y1), (255, 255, 0), 1, tipLength=0.3)
 
+    
+    
     def _to_orig_coords(self, pt):
         return int(pt[0] / self.resize_scale), int(pt[1] / self.resize_scale)
+    

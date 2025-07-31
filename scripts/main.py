@@ -105,13 +105,14 @@ def main():
     evaluator = GazeEvaluator() if not args.no_eval else None
 
     frame_idx = 1  # BeGazeのフレーム番号は1始まり
-
+    print("========================評価開始========================")
+    print(" ")
     while True:
         ret, frame = cap.read()
         if not ret:
             break
 
-        # 推定アルゴリズムの利用ta[frame_idx]
+        # 推定アルゴリズムの利用[frame_idx]
         pred_x, pred_y = estimator.estimate_gaze(frame)
         if args.feedback:
             # フィードバックが有効な場合、正解視線を設定
@@ -129,7 +130,8 @@ def main():
 
             # 評価用データ追加（正規化座標→ピクセル座標で比較）
             if evaluator is not None:
-                evaluator.add((pred_x / width, pred_y / height), (gx, gy))
+                dist = evaluator.add((pred_x / width, pred_y / height), (gx, gy))
+            print(f"\rFrame:{frame_idx} CurrentDist:{dist[0]:.4f} SquaredDist:{dist[1]:.4f}", end="", flush=True)
 
         cv2.imshow("Gaze Overlay", frame)
         out.write(frame)
@@ -142,15 +144,15 @@ def main():
     cap.release()
     out.release()
     cv2.destroyAllWindows()
-    print(f"出力完了：{OUTPUT_PATH}")
+    print("\n========================評価終了========================")
+    print(f"映像出力先：{OUTPUT_PATH}")
+    print(f"使用アルゴリズム：{args.algorithm}")
+    print(f"フレーム数：{frame_idx - 1}")
 
     # 評価結果の表示
     if evaluator is not None:
-        mean_dist = evaluator.mean_distance()
-        if mean_dist is not None:
-            print(f"平均ユークリッド距離（正規化座標）: {mean_dist:.4f}")
-        else:
-            print("評価データがありませんでした。")
+        evaluator.print_eval_results()
+        evaluator.clear()
 
 if __name__ == "__main__":
     main()
